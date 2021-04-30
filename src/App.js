@@ -1,4 +1,6 @@
 import React from "react";
+import { useState, useEffect } from "react";
+
 const data = {
   bankOne: [
     {
@@ -116,7 +118,55 @@ const data = {
 };
 
 const App = () => {
-  return <div></div>;
+  const [audio, setAudio] = useState([]);
+  const [isStopped, setIsStopped] = useState(false);
+
+  useEffect(() => {
+    setAudio(data.bankOne);
+  }, []);
+
+  return (
+    <main className="text-capitalize">
+      <section className="container">
+        <div className="row">
+          <div className="col d-flex align-items-center height ">
+            <article className="col-md-9 mx-auto border p-5 height-50 bg-secondary">
+              <div className="row">
+                <div className="col-sm-6">
+                  {audio.map((key) => {
+                    const { keyCode, keyTrigger, id, url } = key;
+                    return (
+                      <div
+                        className="btn btn-primary m-2 rounded col-3"
+                        onClick={() => {
+                          const audio = document.getElementById({ keyTrigger });
+
+                          key = { id };
+                        }}
+                      >
+                        <audio src={url} id={keyTrigger} className="" />
+                        {keyTrigger}
+                      </div>
+                    );
+                  })}
+                </div>
+                <div className="col-sm-6 text-capitalize">
+                  <button
+                    className="btn btn-dark row"
+                    onClick={() => {
+                      setIsStopped(!isStopped);
+                    }}
+                  >
+                    {isStopped ? "stop" : "play"}
+                  </button>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+    </main>
+  );
 };
 
 export default App;
