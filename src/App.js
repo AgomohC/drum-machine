@@ -1,5 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
+import { FaExchangeAlt, FaPlay, FaStop } from "react-icons/fa";
 
 const data = {
   bankOne: [
@@ -120,19 +121,25 @@ const data = {
 const App = () => {
   const [audio, setAudio] = useState([]);
   const [isStopped, setIsStopped] = useState(false);
+  const [keyId, setKeyId] = useState("");
+  const [bank, setBank] = useState(false);
 
   useEffect(() => {
-    setAudio(data.bankOne);
-  }, []);
+    if (!bank) {
+      setAudio(data.bankOne);
+    } else if (bank) {
+      setAudio(data.bankTwo);
+    }
+  }, [bank]);
 
   return (
     <main className="text-capitalize">
       <section className="container">
         <div className="row">
           <div className="col d-flex align-items-center height ">
-            <article className="col-md-9 mx-auto border p-5 height-50 bg-secondary">
-              <div className="row">
-                <div className="col-sm-6">
+            <article className="col-md-9 mx-auto  p-5 height-50 bg-secondary">
+              <div className="row d-flex justify-content-around">
+                <div className="col-md-6">
                   {audio.map((key) => {
                     const { keyCode, keyTrigger, id, url } = key;
                     return (
@@ -140,7 +147,7 @@ const App = () => {
                         className="btn btn-primary m-2 rounded col-3"
                         onClick={() => {
                           const audio = document.getElementById({ keyTrigger });
-
+                          setKeyId(id);
                           key = { id };
                         }}
                       >
@@ -150,14 +157,27 @@ const App = () => {
                     );
                   })}
                 </div>
-                <div className="col-sm-6 text-capitalize">
+                <div className="col-md-6">
                   <button
-                    className="btn btn-dark row"
+                    className="btn btn-dark btn-block w-100 my-2 mx-auto"
                     onClick={() => {
                       setIsStopped(!isStopped);
                     }}
                   >
-                    {isStopped ? "stop" : "play"}
+                    {isStopped ? <FaPlay /> : <FaStop />}
+                  </button>
+                  <input
+                    type="text"
+                    value={keyId}
+                    className="my-2 mx-auto w-100 rounded p-2 text-capitalize text-primary text-center"
+                  />
+                  <button
+                    className="btn my-2 mx-auto btn-dark btn-block"
+                    onClick={() => {
+                      setBank(!bank);
+                    }}
+                  >
+                    <FaExchangeAlt />
                   </button>
                 </div>
               </div>
