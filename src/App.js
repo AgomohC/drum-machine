@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { FaExchangeAlt, FaPlay, FaStop } from "react-icons/fa";
 
 const data = {
@@ -123,6 +123,9 @@ const App = () => {
   const [isStopped, setIsStopped] = useState(false);
   const [keyId, setKeyId] = useState("");
   const [bank, setBank] = useState(false);
+  const [volume, setVolume] = useState(0);
+
+  const audioFinder = useRef(null);
 
   useEffect(() => {
     if (!bank) {
@@ -137,21 +140,23 @@ const App = () => {
       <section className="container">
         <div className="row">
           <div className="col d-flex align-items-center height ">
-            <article className="col-md-9 mx-auto  p-5 height-50 bg-secondary">
-              <div className="row d-flex justify-content-around">
+            <article className="col-lg-9 mx-auto  p-5 height-50 bg-secondary">
+              <h3 className="text-light text-center my-3">drum machine</h3>
+              <div className="row d-flex height-100 align-items-center justify-content-around">
                 <div className="col-md-6">
                   {audio.map((key) => {
-                    const { keyCode, keyTrigger, id, url } = key;
+                    const { keyTrigger, id, url } = key;
                     return (
                       <div
                         className="btn btn-primary m-2 rounded col-3"
+                        key={id}
                         onClick={() => {
-                          const audio = document.getElementById({ keyTrigger });
-                          setKeyId(id);
-                          key = { id };
+                          !isStopped &&
+                            audioFinder.current.play() &&
+                            setKeyId(id);
                         }}
                       >
-                        <audio src={url} id={keyTrigger} className="" />
+                        <audio ref={audioFinder} src={url} id={keyTrigger} />
                         {keyTrigger}
                       </div>
                     );
@@ -168,8 +173,22 @@ const App = () => {
                   </button>
                   <input
                     type="text"
+                    onChange={() => {
+                      setKeyId("");
+                    }}
                     value={keyId}
                     className="my-2 mx-auto w-100 rounded p-2 text-capitalize text-primary text-center"
+                  />
+                  <input
+                    className="my-2 mx-auto w-100 rounded p-2 text-primary"
+                    type="range"
+                    value={volume}
+                    onChange={(e) => {
+                      setVolume(e.target.value);
+                      const newVolume = volume / 100;
+                      console.log(audioFinder);
+                      audio.volume = newVolume;
+                    }}
                   />
                   <button
                     className="btn my-2 mx-auto btn-dark btn-block"
