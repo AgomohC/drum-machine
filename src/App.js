@@ -187,7 +187,7 @@ const App = () => {
                       const newVolume = volume / 100;
                       let beats = document.querySelectorAll("audio");
                       beats = Array.from(beats);
-                      console.log(newVolume);
+
                       beats.forEach((beat) => {
                         beat.volume = newVolume;
                       });
