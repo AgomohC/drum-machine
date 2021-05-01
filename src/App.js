@@ -123,9 +123,7 @@ const App = () => {
   const [isStopped, setIsStopped] = useState(false);
   const [keyId, setKeyId] = useState("");
   const [bank, setBank] = useState(false);
-  const [volume, setVolume] = useState(0);
-
-  const audioFinder = useRef(null);
+  const [volume, setVolume] = useState(25);
 
   useEffect(() => {
     if (!bank) {
@@ -151,12 +149,13 @@ const App = () => {
                         className="btn btn-primary m-2 rounded col-3"
                         key={id}
                         onClick={() => {
-                          !isStopped &&
-                            audioFinder.current.play() &&
-                            setKeyId(id);
+                          setKeyId(id);
+                          const beat = document.getElementById(keyTrigger);
+                          beat.currentTime = 0;
+                          !isStopped && beat.play();
                         }}
                       >
-                        <audio ref={audioFinder} src={url} id={keyTrigger} />
+                        <audio src={url} id={keyTrigger} />
                         {keyTrigger}
                       </div>
                     );
@@ -186,8 +185,12 @@ const App = () => {
                     onChange={(e) => {
                       setVolume(e.target.value);
                       const newVolume = volume / 100;
-                      console.log(audioFinder);
-                      audio.volume = newVolume;
+                      let beats = document.querySelectorAll("audio");
+                      beats = Array.from(beats);
+                      console.log(newVolume);
+                      beats.forEach((beat) => {
+                        beat.volume = newVolume;
+                      });
                     }}
                   />
                   <button
