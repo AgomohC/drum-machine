@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { FaExchangeAlt, FaPlay, FaStop } from "react-icons/fa";
 
 const data = {
@@ -123,7 +123,7 @@ const App = () => {
   const [isStopped, setIsStopped] = useState(false);
   const [keyId, setKeyId] = useState("");
   const [bank, setBank] = useState(false);
-  const [volume, setVolume] = useState(25);
+  const [volume, setVolume] = useState(0.25);
 
   useEffect(() => {
     if (!bank) {
@@ -152,6 +152,7 @@ const App = () => {
                           setKeyId(id);
                           const beat = document.getElementById(keyTrigger);
                           beat.currentTime = 0;
+                          beat.volume = volume;
                           !isStopped && beat.play();
                         }}
                       >
@@ -181,13 +182,14 @@ const App = () => {
                   <input
                     className="my-2 mx-auto w-100 rounded p-2 text-primary"
                     type="range"
-                    value={volume}
+                    value={volume * 100}
                     onChange={(e) => {
-                      setVolume(e.target.value);
-                      const newVolume = volume / 100;
+                      setVolume(e.target.value / 100);
+                    }}
+                    onClick={() => {
+                      const newVolume = volume;
                       let beats = document.querySelectorAll("audio");
                       beats = Array.from(beats);
-
                       beats.forEach((beat) => {
                         beat.volume = newVolume;
                       });
